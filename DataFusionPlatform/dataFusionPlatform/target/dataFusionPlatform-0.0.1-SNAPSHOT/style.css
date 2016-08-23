@@ -1,0 +1,137 @@
+html, body {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	overflow-y:hidden;
+	overflow-x:hidden;
+	color: white;
+}
+table, th, td {
+    border: 1px solid black;
+    color: black;
+    background-color: white;
+}
+
+legend {
+	color: white;
+	font-family: font"Lucida Console", Monaco, monospace;
+}
+
+.list {
+	color: white;
+	font-family: font"Lucida Console", Monaco, monospace;
+}
+
+div {
+	font-family: font"Lucida Console", Monaco, monospace;
+	height: 100%;
+    box-sizing:border-box;
+    -moz-box-sizing:border-box;
+    -webkit-box-sizing:border-box;
+}
+
+.title {
+	font-family: font"Lucida Console", Monaco, monospace;
+	color: black;
+	font-weight: bold;
+	text-align: center;
+	color: white;
+}
+
+#metainfo {
+	position: absolute;
+	bottom: 0;
+	background-color: #ffffff;
+	height: 150px;
+	margin-bottom: 20px;
+	width: 80%;
+}
+
+#logo {
+	height: 35px;
+	position: fixed;
+	bottom: 10px;
+	right: 10px;
+}
+
+#export {
+	position: inherit;
+	top: 94%;
+	left: 10px;
+}
+
+#graph {
+	/* backgrounds for all possible browsers */
+	background: #e0e0e0;
+	/*
+	background: -moz-linear-gradient(left, #f5f5f5 0%, #ffffff 15%, #ffffff 85%, #f5f5f5 100%);
+	background: -webkit-gradient(linear, left top, right top, color-stop(0%,#f5f5f5), color-stop(15%,#ffffff), color-stop(85%,#ffffff), color-stop(100%,#f5f5f5));
+	background: -webkit-linear-gradient(left, #f5f5f5 0%,#ffffff 15%,#ffffff 85%,#f5f5f5 100%);
+	background: -o-linear-gradient(left, #f5f5f5 0%,#ffffff 15%,#ffffff 85%,#f5f5f5 100%);
+	background: -ms-linear-gradient(left, #f5f5f5 0%,#ffffff 15%,#ffffff 85%,#f5f5f5 100%);
+	background: linear-gradient(to right, #f5f5f5 0%,#ffffff 15%,#ffffff 85%,#f5f5f5 100%);
+	*/
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f5f5f5', endColorstr='#f5f5f5',GradientType=1 );
+	width: 70%;
+	float: right;
+	position: relative;
+}
+
+#console {
+	/* backgrounds for all possible browsers */
+	background: #bb0000; /* Old browsers */
+	background: -moz-linear-gradient(left,  #bb0000 0%, #8f0222 85%, #6d0019 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, right top, color-stop(0%,#bb0000), color-stop(85%,#8f0222), color-stop(100%,#6d0019)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(left,  #bb0000 0%,#8f0222 85%,#6d0019 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(left,  #bb0000 0%,#8f0222 85%,#6d0019 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(left,  #bb0000 0%,#8f0222 85%,#6d0019 100%); /* IE10+ */
+	background: linear-gradient(to right,  #bb0000 0%,#8f0222 85%,#6d0019 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#bb0000', endColorstr='#6d0019',GradientType=1 ); /* IE6-9 */
+
+	/*
+	background: -moz-linear-gradient(left, #90CAF9 0%, #90CAF9 50%, #90CAF9 100%);
+	background: -webkit-gradient(linear, left top, right top, color-stop(0%,#90CAF9), color-stop(50%,#90CAF9), color-stop(100%,#90CAF9));
+	background: -webkit-linear-gradient(left, #BBDEFB 0%,#90CAF9 50%,#90CAF9 100%);
+	background: -o-linear-gradient(left, #90CAF9 0%,#90CAF9 50%,#90CAF9 100%);
+	background: -ms-linear-gradient(left, #90CAF9 0%,#90CAF9 50%,#90CAF9 100%);
+	background: linear-gradient(to right, #90CAF9 0%,#90CAF9 50%,#90CAF9 100%);
+	*/
+	filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#90CAF9', endColorstr='#90CAF9',GradientType=1 );
+	text-align: left;
+	padding-left: 25px;
+	position: relative;
+	width: 30%;
+	float: left;
+}
+
+.infocell {
+	font-family: font"Lucida Console", Monaco, monospace;
+	color: black;
+}
+
+.matchButtons {
+	width: 35%;
+	-webkit-box-shadow:rgba(0,0,0,0.98) 0 1px 0 0;
+	-moz-box-shadow:rgba(0,0,0,0.98) 0 1px 0 0;
+	box-shadow:rgba(0,0,0,0.98) 0 1px 0 0;
+	background-color:#EEE;
+	border-radius:0;
+	-webkit-border-radius:0;
+	-moz-border-radius:0;
+	border:1px solid #999;
+	color:#666;
+	font-family:'Lucida Grande',Tahoma,Verdana,Arial,Sans-serif;
+	font-size:11px;
+	font-weight:700;
+	padding:2px 6px;
+	height:28px
+}
+
+/*button {
+	padding: 10px;
+	margin: 0 auto;
+	display: block;
+	margin-top: 30px;
+	margin-bottom: 30px;
+}*/
+

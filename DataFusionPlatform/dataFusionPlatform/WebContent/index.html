@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="http://d3js.org/d3.v3.min.js" type="text/javascript"></script>
+<script src="bootstrap/js/bootstrap.js"></script>
+<link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body>
+
+<div id="console">
+
+<!-- First Form -->
+<form id="getDataForm" method="POST">
+	<fieldset id="fieldSet" class>
+		<legend class="title">Choose a data set!</legend>
+
+	</fieldset>
+	<br>
+    <input type="button" id="form1Button" onclick="getDataSet()" class="btn btn-default" value="Submit"/>
+	
+</form> 
+
+<!-- Second Form -->
+<form id="pickNode" method="POST">
+	<fieldset>
+		<legend class="title">Pick a node!</legend>
+		<select id="nodeSelections" size="5" onclick="optionChange();">
+		</select>
+		<br><br>
+		<input type="button" class="btn btn-default" onclick="goBackToForm1()" value="Back"/>
+		<input type="button" class="btn btn-default" id="getNode" value="Get Possible Matches"/>
+	</fieldset>
+</form>
+
+<!-- Third Form -->
+<form id="findMatches" method="POST">
+	<fieldset>
+		<legend class="title">Explore different matching properties!</legend>
+		<div id="displayOptions" display:table ></div>
+		<br><br>
+		<input type="button" class="btn btn-default" id="backToSecondForm" onclick="goBackToForm2()" value="Back"/>
+	</fieldset>
+</form>
+
+<!-- Fourth Form -->
+<form id="createEdges" method="POST">
+	<fieldset>
+		<legend class="title">Modify the graph!</legend>
+		<table cellpadding="15" id="createEdgesTable">
+		</table>
+		<br>	
+		<input type="button" class="btn btn-default" id="backToThirdForm" onclick="goBackToForm3()" value="Back"/>
+	</fieldset>
+</form>
+
+
+	<!-- Table for node metadata output -->
+	<div>
+		<table id="metainfo">
+		  <thead></thead>
+		  <tbody>
+		    <tr>
+		      <td><code>Title:</code></td>
+		      <td class="infocell"></td>
+		    </tr>
+		    <tr>
+		      <td><code>Label:</code></td>
+		      <td class="infocell"></td>
+		    </tr>
+		    <tr>
+		      <td><code>Represents:</code></td>
+		      <td class="infocell"></td>
+		    </tr>
+		    <tr>
+		      <td><code>Columntype:</code></td>
+		      <td class="infocell"></td>
+		    </tr>
+		    <tr>
+		      <td><code>Semanticrelation:</code></td>
+		      <td class="infocell"></td>
+		    </tr>
+		  </tbody>
+		</table>
+	</div>
+</div>
+
+<!-- <div id="metainfo"></div>
+</div> -->
+
+<div id="graph">
+<button id="export" onclick="dataExport()" class="btn btn-default">Export</button>
+<image id="logo" src="logo.png">
+</div>
+
+<style type="text/css">
+ 	.node { stroke: #666; stroke-width: 0.5px; cursor: pointer; cursor: hand; }
+    .node text { fill: #333; stroke: #333; }
+    .node.Column { fill: #bb0000; }
+    .node circle:hover { fill: #dcaa38}
+    .node.Table { fill: #666; }
+    .node.Table circle { stroke: #bb0000; stroke-width: 3px; }
+    .node.JoinTable { fill: #666}
+    .node.JoinTable circle { stroke: #bb0000; stroke-width: 3px; }
+    .node.Dataset { fill: #333;}
+    .node.Dataset circle { stroke: #666; stroke-width: 5px; }
+    .link { stroke: #999; stroke-width: 4px; }
+    div {height: 100%;}
+    html {height: 100%;}
+    body {height: 100%;}
+</style>
+
+
+<script src="frontend.js"></script>
+
+</body>
+</html>

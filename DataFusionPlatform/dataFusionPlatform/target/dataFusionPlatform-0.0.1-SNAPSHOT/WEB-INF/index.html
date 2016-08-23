@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="http://d3js.org/d3.v3.min.js" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body>
+
+<div id="console">
+<h2>Find all matches:</h2>
+<div id="displayOptions"></div>
+
+<div id="metainfo"></div>
+</div>
+
+<div id="graph">
+</div>
+
+
+<style type="text/css">
+    .node { stroke: #222; stroke-width: 1.5px; }
+    .node.Column { fill: #777; }
+    .node.Table { fill: #BBB; }
+    .node.JoinTable { fill: #999}
+    .node.Dataset { fill: #333}
+    .link { stroke: #999; stroke-width: 7px; }
+    div {height: 100%;}
+    html {height: 100%;}
+    body {height: 100%;}
+</style>
+
+
+<script type="text/javascript">
+    //var width = 1200, height = 800, radius = 20, rTable = 30, rDataset = 40;
+    var radius = 20, rTable = 30, rDataset = 40;
+    var margin = {top: -5, right: -5, bottom: -5, left: -5};
+    var width = 1200 - margin.left - margin.right, height = 800 - margin.top - margin.bottom;
+    
+    var force = d3.layout.force()
+            .charge(-1000).linkDistance(150).size([width, height]);
+	//[width, height] [width + margin.left + margin.right, height + margin.top + margin.bottom]
+    
+    
+    //Test zoom functionality
+ 	// create the zoom listener
+ 	var zoom = d3.behavior.zoom()
+            .scaleExtent([1, 10])
+            .on("zoom", zoomed);
+ 	
+//  	var svg = d3.select("#graph").append("svg")
+//     			.attr("width", "100%")
+//     			.attr("height", "100%")
+//     			.append("g")
+//     			.attr("transform", "translate(" + margin.left + "," + margin.right + ")")
+//     			.call(zoom);
+    
+    var svg = d3.select("#graph")
+    		.append("svg")
+            .attr("width", "100%")
+            .attr("height", "100%")
+            .attr("pointer-events", "all")
+            .attr("transform", "translate(" + margin.left + "," + margin.right + ")")
+            .call(zoom);
+    
+    var container = svg.append("g");
+    
+	//var currRepresents = "null";
+	//zoomListener(svg);
+	
+    d3.json("/Justin/graph", function(error, graph) {
+		if (error) return;
+		
+        force.nodes(graph.nodes).links(graph.links).start();
+
+        var link = container.append("g")
+        		.selectAll(".link")
+                .data(graph.links).enter()
+                .append("line").attr("class", "link");
+
+        var node = container.append("g")
+        		.selectAll(".node")
+                .data(graph.nodes).enter()
+                .append("circle")
+                .attr("class", function (d) { console.log("Represents: " + d.properties.represents); return "node "+ d.type.toString() })
+                .attr("r", radius)
+                .style("fill", function(d) {return d.colr; })
+                .call(force.drag);
+        
+     	// Increase node radius of Dataset nodes      
+        svg.selectAll(".node")
+		.filter(function(d) { return d.type == "Dataset"; })
+		.attr("r", rDataset);
+        
+    	// Increase node radius of Table nodes      
+        svg.selectAll(".node")
+		.filter(function(d) { return d.type == "Table"; })
+		.attr("r", rTable);
+    	
+     	// Increase node radius of JoinTable nodes      
+        svg.selectAll(".node")
+		.filter(function(d) { return d.type == "JoinTable"; })
+		.attr("r", rTable);
+     	
+        //zoomListener(svg);
+     	
+        // html title attribute
+        node.append("title")
+                .text(function (d) { return d.name; })
+             
+		var state = false;
+        var last = null;
+        var current = null;
+ 		node.on("click", function(n)
+        		{
+        			//Return color of nodes back to normal
+        			svg.selectAll(".node").style("fill", function(d) { return d.colr; });
+        			
+        			var getOptionsDiv = document.getElementById("displayOptions");
+        			while (getOptionsDiv.hasChildNodes()) { 
+        				getOptionsDiv.removeChild(getOptionsDiv.lastChild);
+        			}
+        			
+        			
+        								
+					//Get Represents property from currently selected node
+					currRepresents = n.properties.represents;
+					
+					//Add data to meta info div
+					var metainf = "";
+					metainf = metainf.concat("Title: ", n.name, "<br/>Label: ", n.type, "<br/>Represents: ", n.properties.represents, 
+					"<br/>Column Type: ", n.properties.columntype, "<br/>Semantic Relation: ", n.properties.semanticrelation);
+					console.log(metainf);
+					d3.select("#metainfo")
+						.html(metainf);
+					
+					last = current;
+					current = d3.select(this);
+				    current.style('fill', 'red');
+				    last.style('fill', function(d) { return d.colr; });
+				
+					getTitle = n.properties.title;
+					getRepresents = n.properties.represents;
+					getColumnType = n.properties.columntype;
+					getSemanticRelation = n.properties.semanticrelation;
+					
+					//Dynamically create button for finding related Titles
+					if (getTitle !== undefined) {
+						//Create the button element
+						var findTitlesBtn = document.createElement("BUTTON"); 
+						
+						//Create the button label, and add it to the button
+						var title = document.createTextNode("Find Related Titles");      
+						findTitlesBtn.appendChild(title);
+						
+						//Call findTitle function when button is clicked
+						findTitlesBtn.onclick = findTitle;
+						
+						//Add button to the 'displayOptions' div inside the console
+						document.getElementById("displayOptions").appendChild(findTitlesBtn);
+					}
+					
+					//Dynamically create button for finding related Represents
+					if (getRepresents !== undefined) {
+						//Create the button element
+						var findRepresentsBtn = document.createElement("BUTTON");
+						
+						//Create the button label, and add it to the button 
+						var title = document.createTextNode("Find Related Represents");       
+						findRepresentsBtn.appendChild(title);
+						
+						//Call findRepresents function when button is clicked
+						findRepresentsBtn.onclick = findRep;
+						
+						//Add button to the 'displayOptions' div inside the console
+						document.getElementById("displayOptions").appendChild(findRepresentsBtn);
+					}
+					
+					//Dynamically create button for finding related Column Types
+					if (getColumnType !== undefined) {
+						//Create the button element
+						var findColumnTypeBtn = document.createElement("BUTTON"); 
+						
+						//Create the button label, and it to the button
+						var title = document.createTextNode("Find Related Column Types");       
+						findColumnTypeBtn.appendChild(title);
+						
+						//Call findColType function when button is clicked
+						findColumnTypeBtn.onclick = findColType;
+						
+						//Add button to the 'displayOptions' div inside the console
+						document.getElementById("displayOptions").appendChild(findColumnTypeBtn);
+					}
+					
+					//Dynamically create button for finding related Semantic Relations
+					if (getSemanticRelation !== undefined) {
+						//Create the button element
+						var findSemanticRelationsBtn = document.createElement("BUTTON"); 
+						
+						//Create the button label, and it to the button
+						var title = document.createTextNode("Find Related Semantic Relations");       
+						findSemanticRelationsBtn.appendChild(title);
+						
+						//Call findSemRel function when button is clicked
+						findSemanticRelationsBtn.onclick = findSemRel;
+						
+						//Add button to the 'displayOptions' div inside the console
+						document.getElementById("displayOptions").appendChild(findSemanticRelationsBtn);
+					}
+					
+					
+				    
+        		});
+
+
+
+        // force feed algo ticks
+        force.on("tick", function() {
+        
+        	 node.attr("cx", function(d) { return d.x = Math.max(radius, Math.min(width - radius, d.x)); })
+             .attr("cy", function(d) { return d.y = Math.max(radius, Math.min(height - radius, d.y)); });
+        	
+        	
+            link.attr("x1", function(d) { return d.source.x; })
+                    .attr("y1", function(d) { return d.source.y; })
+                    .attr("x2", function(d) { return d.target.x; })
+                    .attr("y2", function(d) { return d.target.y; });
+
+            node.attr("cx", function(d) { return d.x; })
+                    .attr("cy", function(d) { return d.y; });
+        });
+        
+        
+        
+    });
+    
+ 	// function for handling zoom event
+    function zoomed() {
+        container.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+      }
+    
+    //Function used to find nodes with related 'Title' properties
+    function findTitle() {
+    	    
+    	//Return color of nodes back to normal
+        svg.selectAll(".node").style("fill", function(d) { return d.colr; });
+    	
+		//Filter through all nodes to find matching titles, color them yellow
+		svg.selectAll(".node")
+		.filter(function(d) { return d.properties.title == getTitle; })
+		.style('fill', 'yellow');
+				
+    }
+    
+    //Function used to find nodes with related 'Represents' properties
+    function findRep() {	  
+      
+    	//Return color of nodes back to normal
+        svg.selectAll(".node").style("fill", function(d) { return d.colr; });
+        
+		//Filter through all nodes to find matching represents, color them blue
+		svg.selectAll(".node")
+		.filter(function(d) { return d.properties.represents == getRepresents; })
+		.style('fill', 'blue');
+				
+	}
+	
+	//Function used to find nodes with related 'Column Type' properties
+    function findColType() {	    
+		    	
+		//Return color of nodes back to normal
+        svg.selectAll(".node").style("fill", function(d) { return d.colr; });
+        
+		//Filter through all nodes to find matching column types, color them green
+		svg.selectAll(".node")
+		.filter(function(d) { return d.properties.columntype == getColumnType; })
+		.style('fill', 'green');
+		
+	}
+	
+	//Function used to find nodes with related 'Semantic Relation' properties
+    function findSemRel() {	    
+				    	
+		//Return color of nodes back to normal
+        svg.selectAll(".node").style("fill", function(d) { return d.colr; });
+        
+		//Filter through all nodes to find matching semantic relations, color them orange
+		svg.selectAll(".node")
+		.filter(function(d) { return d.properties.semanticrelation == getSemanticRelation; })
+		.style('fill', 'orange');
+		
+	}
+    
+
+</script>
+</body>
+</html>
